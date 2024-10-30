@@ -34,19 +34,19 @@ while  cap.isOpened(): # 當攝影機有開啟時
             #使用串列，存放5個手指的初始值，初始值=0
             finger=[0,0,0,0,0] # 0表示手指未彎曲, 1表示手指彎曲,依序為拇指、食指、中指、無名指、小指
             #判斷拇指是否彎曲
-            if results.multi_hand_landmarks[i].landmark[4].x<results.multi_hand_landmarks[i].landmark[3].x: # 如果食指指尖的x座標小於食指第二個關節的x座標
+            if results.multi_hand_landmarks[i].landmark[4].x < results.multi_hand_landmarks[i].landmark[3].x: # 如果食指指尖的x座標小於食指第二個關節的x座標
                 finger[0]=1
             #判斷食指是否彎曲(右手)
-            if results.multi_hand_landmarks[i].landmark[8].y<results.multi_hand_landmarks[i].landmark[6].y: # 如果食指指尖的y座標小於食指第二個關節的y座標
+            if results.multi_hand_landmarks[i].landmark[8].y < results.multi_hand_landmarks[i].landmark[6].y: # 如果食指指尖的y座標小於食指第二個關節的y座標
                 finger[1]=1
             #判斷中指是否彎曲(右手)
-            if results.multi_hand_landmarks[i].landmark[12].y<results.multi_hand_landmarks[i].landmark[10].y: # 如果中指指尖的y座標小於中指第二個關節的y座標
+            if results.multi_hand_landmarks[i].landmark[12].y < results.multi_hand_landmarks[i].landmark[10].y: # 如果中指指尖的y座標小於中指第二個關節的y座標
                 finger[2]=1
             #判斷無名指是否彎曲(右手)
-            if results.multi_hand_landmarks[i].landmark[16].y<results.multi_hand_landmarks[i].landmark[14].y: # 如果無名指指尖的y座標小於無名指第二個關節的y座標
+            if results.multi_hand_landmarks[i].landmark[16].y < results.multi_hand_landmarks[i].landmark[14].y: # 如果無名指指尖的y座標小於無名指第二個關節的y座標
                 finger[3]=1
             #判斷小指是否彎曲(右手)
-            if results.multi_hand_landmarks[i].landmark[20].y<results.multi_hand_landmarks[i].landmark[18].y: # 如果小指指尖的y座標小於小指第二個關節的y座標
+            if results.multi_hand_landmarks[i].landmark[20].y < results.multi_hand_landmarks[i].landmark[18].y: # 如果小指指尖的y座標小於小指第二個關節的y座標
                 finger[4]=1
             #在終端機顯示手指彎曲狀態
             # print(finger)
