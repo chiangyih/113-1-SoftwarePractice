@@ -33,15 +33,14 @@ while  cap.isOpened(): # 當攝影機有開啟時
             hand_type=results.multi_handedness[i].classification[0].label # 取得手部的側邊, label表示左手或右手, 左手為Left, 右手為Right
             hand_joint_coordinate=results.multi_hand_landmarks[i] # 取得手部的關節座標
             mpDraw.draw_landmarks(frame_flip,hand_joint_coordinate,mpHands.HAND_CONNECTIONS) # 畫出手部關節連線, HAND_CONNECTIONS是手部關節連線的索引值, 這裡使用mpHands.HAND_CONNECTIONS取得索引值
-            finger_tip_coordinate=[] # 建立空串列, 用來存放手指尖的座標
-            
+                      
             t_x=t_y=i_x=i_y=0 # 初始化拇指與食指的x、y座標
             
             for coordinate_id,joint in enumerate(hand_joint_coordinate.landmark): # 逐一取出手部的關節座標,hand_joint_coordinate.landmark是手部的關節座標;coordinate_id是索引值(關節編號),joint是元素值
                 # enumerate()可以取得索引值和元素值,因此enumerate(hand_joint_coordinate.landmark)可以取得索引值(關節編號)和手部的關節座標
                 x=int(joint.x*w) # 取得關節座標的x座標, 乘以寬度w, 並轉換為畫面上的座標, 存入x, 這裡使用int()將座標轉換為整數
                 y=int(joint.y*h) # 取得關節座標的y座標, 乘以高度h, 並轉換為畫面上的座標, 存入y, 這裡使用int()將座標轉換為整數
-                # #finger_tip_coordinate.append((x,y)) # 將座標(x,y)存入finger_tip_coordinate串列 
+              
                 cv2.circle(frame_flip,(x,y),5,(255,0,0),cv2.FILLED) # 畫出手部關節座標的圓圈, 圓心座標為(x,y), 半徑為5, 顏色為(255,0,0), 填滿圓圈
                 
                 cv2.putText(frame_flip,str(coordinate_id),(x,y),cv2.FONT_HERSHEY_PLAIN,1,(0,0,255),2) # 在手部關節座標的位置(x,y)放置文字(關節編號), 字型為HERSHEY_PLAIN, 大小為1, 顏色為(255,255,255), 粗細為2
