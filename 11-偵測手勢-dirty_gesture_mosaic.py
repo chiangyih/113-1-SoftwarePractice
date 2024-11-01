@@ -18,7 +18,7 @@ cap=cv2.VideoCapture(0) # 開啟攝影機
 
 
 # ==========打碼函數=============================================
-def do_mosaic(frame,x,y,w,h,neighbor=9): # neighbor是用來控制打碼程度的參數，數值越大，打碼程度越高；x,y,w,h是矩形的左上角座標和寬高
+def do_mosaic(frame,x,y,w,h,neighbor=10): # neighbor是用來控制打碼程度的參數，數值越大，打碼程度越高；x,y,w,h是矩形的左上角座標和寬高
     # 來源：https://www.796t.com/article.php?id=10626
     fh,fw = frame.shape[0],frame.shape[1] # 取得畫面的高度與寬度
     if (y + h > fh) or (x + w > fw): # 如果矩形超出畫面範圍，則不處理

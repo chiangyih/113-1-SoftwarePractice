@@ -18,6 +18,7 @@ hands=mpHands.Hands(   # 建立手部偵測物件, 可以設定參數, 例如最
 # ===================================================
 
 cap=cv2.VideoCapture(0) # 開啟攝影機
+Thumb_coordinate =[] # 建立空串列, 用來存放拇指指尖的座標
 
 while  cap.isOpened(): # 當攝影機有開啟時
     start_time=time.time() # 計時開始(取得目前時間，用來計算FPS)
@@ -34,42 +35,48 @@ while  cap.isOpened(): # 當攝影機有開啟時
             mpDraw.draw_landmarks(frame_flip,hand_joint_coordinate,mpHands.HAND_CONNECTIONS) # 畫出手部關節連線, HAND_CONNECTIONS是手部關節連線的索引值, 這裡使用mpHands.HAND_CONNECTIONS取得索引值
             finger_tip_coordinate=[] # 建立空串列, 用來存放手指尖的座標
             
+            t_x=t_y=i_x=i_y=0 # 初始化拇指與食指的x、y座標
+            
             for coordinate_id,joint in enumerate(hand_joint_coordinate.landmark): # 逐一取出手部的關節座標,hand_joint_coordinate.landmark是手部的關節座標;coordinate_id是索引值(關節編號),joint是元素值
                 # enumerate()可以取得索引值和元素值,因此enumerate(hand_joint_coordinate.landmark)可以取得索引值(關節編號)和手部的關節座標
                 x=int(joint.x*w) # 取得關節座標的x座標, 乘以寬度w, 並轉換為畫面上的座標, 存入x, 這裡使用int()將座標轉換為整數
                 y=int(joint.y*h) # 取得關節座標的y座標, 乘以高度h, 並轉換為畫面上的座標, 存入y, 這裡使用int()將座標轉換為整數
-                finger_tip_coordinate.append((x,y)) # 將座標(x,y)存入finger_tip_coordinate串列 
+                # #finger_tip_coordinate.append((x,y)) # 將座標(x,y)存入finger_tip_coordinate串列 
                 cv2.circle(frame_flip,(x,y),5,(255,0,0),cv2.FILLED) # 畫出手部關節座標的圓圈, 圓心座標為(x,y), 半徑為5, 顏色為(255,0,0), 填滿圓圈
                 
                 cv2.putText(frame_flip,str(coordinate_id),(x,y),cv2.FONT_HERSHEY_PLAIN,1,(0,0,255),2) # 在手部關節座標的位置(x,y)放置文字(關節編號), 字型為HERSHEY_PLAIN, 大小為1, 顏色為(255,255,255), 粗細為2
-                
+                            
                 if coordinate_id==0: # 如果手部關節座標的編號為0(手腕位置)
-                    cv2.putText(frame_flip,hand_type,(finger_tip_coordinate[0][0],finger_tip_coordinate[0][1]+30),cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),2) # finger_tip_coordinate[0][0]位置在手腕的x座標, finger_tip_coordinate[0][1]位置在手腕的y座標
+                    # cv2.putText(frame_flip,hand_type,(finger_tip_coordinate[0][0],finger_tip_coordinate[0][1]+30),cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),2) # finger_tip_coordinate[0][0]位置在手腕的x座標, finger_tip_coordinate[0][1]位置在手腕的y座標
+                    cv2.putText(frame_flip,hand_type,(x,y+30),cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),2) # 在手腕的位置(x,y+30)放置文字(左手或右手), 字型為HERSHEY_SIMPLEX, 大小為1, 顏色為(0,255,0), 粗細為2
                 if coordinate_id==4: # 如果手部關節座標的編號為4(母指指尖位置)
                     cv2.putText(frame_flip,str(x)+','+str(y),(x-50,y-20),cv2.FONT_HERSHEY_PLAIN,1,(81,138,234),1) 
-                    # 終端機顯示拇指指間的x、y座標
-                    # print(f"拇指指尖位置: {x},{y}")
-                    # 將x，y座標存放到 Thumb_coordinate串列
-                    Thumb_coordinate = [x,y]  
+                    
+                    t_x=x # 將拇指指尖的x座標存入t_x
+                    t_y=y # 將拇指指尖的y座標存入t_y
+                                 
+                
+                 
                 if coordinate_id==8: # 如果手部關節座標的編號為8(食指指尖位置)
                     cv2.putText(frame_flip,str(x)+','+str(y),(x-30,y-20),cv2.FONT_HERSHEY_PLAIN,1,(81,138,234),1)
-                    # 終端機顯示食指指間的x、y座標
-                    # print(f"食指指尖位置: {x},{y}")
-                    # 將x，y座標存放到 Index_coordinate串列
-                    Index_coordinate = [x,y]
                     
-                # if coordinate_id==12: # 如果手部關節座標的編號為12(中指指尖位置)
-                #     cv2.putText(frame_flip,str(x)+','+str(y),(x-30,y-20),cv2.FONT_HERSHEY_PLAIN,1,(81,138,234),1)            
-                
+                    i_x=x # 將食指指尖的x座標存入i_x
+                    i_y=y # 將食指指尖的y座標存入i_y                  
+                    
+               
                 # ==============計算拇指 Thumb_coordinate與食指Index_coordinate的距離=======================
-                T-I_length=math.sqrt((Thumb_coordinate[0]-Index_coordinate[0])**2+(Thumb_coordinate[1]-Index_coordinate[1])**2)      
-                print(f"拇指與食指的距離: str(T-I_length)")
-                 
-    
+                T_I_length=math.sqrt((i_x-t_x)**2+(i_y-t_y)**2) # 計算拇指與食指的距離, 公式為: sqrt((ix-tx)**2+(iy-ty)**2), 這裡使用math.sqrt()計算平方根   
+                print(f"拇指與食指的距離: {T_I_length}")
+                # ====================================================================================           
+                
+                
     end_time=time.time() # 計時結束
     fps=round(1/(end_time-start_time),2) # 計算FPS, 1除以(end_time-start_time), 並四捨五入到小數點後兩位
     cv2.putText(frame_flip,f"FPS:{fps}",(10,30),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,255),2) # 在畫面左上角放置FPS文字, 顯示FPS的值;f為格式化字串, {fps}表示要顯示的值, (10,30)為文字的位置, cv2.FONT_HERSHEY_SIMPLEX為字型, 大小為1, 顏色為(255,255,255), 粗細為2
     cv2.imshow("finger_detection",frame_flip) # 顯示畫面
+    
+                 
+    
     
     
     key=cv2.waitKey(1) # 等待1毫秒, 並取得鍵盤輸入值
